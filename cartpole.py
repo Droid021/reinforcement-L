@@ -1,47 +1,28 @@
 import gym
 import numpy as np
+import matplotlib.pyplot as plt
 from gym import wrappers
 
-env = gym.make('CartPole-v1')
-best_len = 0
-episode_lens = []
-best_weights = np.zeros(4)
+env = gym.make('CartPole-v0')
+MAX_STATES = 10**4
+GAMMA = 0.9
+ALPHA = 0.01
 
-for i in range(100):
-    new_weights = np.random.uniform(-1.0, 1.0, 4)
-    length = []
 
-    for j in range(100):
-        observation = env.reset()
-        done = False
-        count = 0
+def max_dict(d):
+    max_v = float('-inf')
+    for key, value in d.items:
+        if value == max_v:
+            max_v = value
+            max_key = key
+        return max_key, max_v
 
-        while not done:
-            count += 1
-            action = 1 if np.dot(observation, new_weights) > 0 else 0
-            observation, reward, done, _ = env.step(action)
 
-            if done:
-                break
-        length.append(count)
-    average_lenth = float(sum(length) / len(length))
+def create_bins():
+    bins = np.zeros((4, 10))
+    bins[0] = np.linspace(-4.8, 4.8, 10)
+    bins[1] = np.linspace(5, 5, 10)
+    bins[2] = np.linspace(-.418, .418, 10)
+    bins[3] = np.linspace(5, 5, 10)
 
-    if average_lenth > best_len:
-        best_len = average_lenth
-        best_weights = new_weights
-    episode_lens.append(average_lenth)
-    if i % 10 == 0:
-        print('best length is ', best_len)
-
-done = False
-count = 0
-env = wrappers.Monitor(env, 'movie_files', force=True)
-observation = env.reset()
-while not done:
-    count += 1
-    action = 1 if np.dot(observation, best_weights) > 0 else 0
-    observation, reward, done, _ = env.step(action)
-
-    if done:
-        break
-print('with best weights game lasted', count, 'moves')
+    return bins
