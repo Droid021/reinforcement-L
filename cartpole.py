@@ -83,3 +83,17 @@ def play_one_game(bins, Q, epsilon=0.5):
 
         state, action = state_new, a1
     return total_reward, count
+
+
+def play_many_games(bins, N=1000):
+    Q = initialize_Q()
+    length = []
+    reward = []
+    for n in range(N):
+        epsilon = 1.0/np.sqrt(n+1)
+        episode_reward, episode_length = play_one_game(bins, Q, epsilon)
+        if n % 100 == 0:
+            print(n, '%.4f' % eps, episode_reward)
+        length.append(episode_length)
+        reward.append(episode_reward)
+    return length, reward
