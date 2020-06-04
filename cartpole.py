@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from gym.wrappers import Monitor
 
 env = gym.make('CartPole-v0')
-env = Monitor(env, 'moviefiles/q', force=True)
+env = Monitor(env, 'moviefiles/', force=True)
 
 MAXSTATES = 10**4
 GAMMA = 0.9
