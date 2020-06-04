@@ -26,3 +26,10 @@ def create_bins():
     bins[3] = np.linspace(5, 5, 10)
 
     return bins
+
+
+def assign_bins(observation, bins):
+    state = np.zeros(4)
+    for i in range(4):
+        state[i] = np.digitize(observation[i], bins[i])
+    return state
