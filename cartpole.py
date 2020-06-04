@@ -1,8 +1,10 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
+from gym.wrappers import Monitor
 
 env = gym.make('CartPole-v0')
+env = Monitor(env, 'moviefiles/q', force=True)
 
 MAXSTATES = 10**4
 GAMMA = 0.9
@@ -19,13 +21,11 @@ def max_dict(d):
 
 
 def create_bins():
-
     bins = np.zeros((4, 10))
     bins[0] = np.linspace(-4.8, 4.8, 10)
     bins[1] = np.linspace(-5, 5, 10)
     bins[2] = np.linspace(-.418, .418, 10)
     bins[3] = np.linspace(-5, 5, 10)
-
     return bins
 
 
@@ -62,12 +62,12 @@ def initialize_Q():
 def play_one_game(bins, Q, eps=0.5):
     observation = env.reset()
     done = False
-    cnt = 0  # number of moves in an episode
+    count = 0  # number of moves in an episode
     state = get_state_as_string(assign_bins(observation, bins))
     total_reward = 0
 
     while not done:
-        cnt += 1
+        count += 1
         # np.random.randn() seems to yield a random action 50% of the time ?
         if np.random.uniform() < eps:
             act = env.action_space.sample()  # epsilon greedy
@@ -78,7 +78,7 @@ def play_one_game(bins, Q, eps=0.5):
 
         total_reward += reward
 
-        if done and cnt < 200:
+        if done and count < 200:
             reward = -300
 
         state_new = get_state_as_string(assign_bins(observation, bins))
@@ -87,25 +87,21 @@ def play_one_game(bins, Q, eps=0.5):
         Q[state][act] += ALPHA*(reward + GAMMA*max_q_s1a1 - Q[state][act])
         state, act = state_new, a1
 
-    return total_reward, cnt
+    return total_reward, count
 
 
-def play_many_games(bins, N=10000):
+def play_many_games(bins, N=1000):
     Q = initialize_Q()
 
     length = []
     reward = []
     for n in range(N):
-        # eps=0.5/(1+n*10e-3)
         eps = 1.0 / np.sqrt(n+1)
-
         episode_reward, episode_length = play_one_game(bins, Q, eps)
-
         if n % 100 == 0:
             print(n, '%.4f' % eps, episode_reward)
         length.append(episode_length)
         reward.append(episode_reward)
-
     return length, reward
 
 
@@ -122,5 +118,4 @@ def plot_running_avg(totalrewards):
 if __name__ == '__main__':
     bins = create_bins()
     episode_lengths, episode_rewards = play_many_games(bins)
-
     plot_running_avg(episode_rewards)
