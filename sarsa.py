@@ -1,4 +1,4 @@
-import numys as np
+import numpy as np
 import matplotlib.pyplot as plt
 import gym
 from gym.wrappers import Monitor
@@ -56,14 +56,14 @@ if __name__ == '__main__':
         observation = env.reset()
         s = getState(observation)
         rand = np.random.random()
-        a = maxAction(Q, s) if rand < (1-EPS) else env.action_space.sample()
+        a = max_action(Q, s) if rand < (1-EPS) else env.action_space.sample()
         done = False
         epRewards = 0
         while not done:
             observation_, reward, done, info = env.step(a)
             s_ = getState(observation_)
             rand = np.random.random()
-            a_ = maxAction(Q, s_) if rand < (
+            a_ = max_action(Q, s_) if rand < (
                 1-EPS) else env.action_space.sample()
             epRewards += reward
             Q[s, a] = Q[s, a] + ALPHA*(reward + GAMMA*Q[s_, a_] - Q[s, a])
