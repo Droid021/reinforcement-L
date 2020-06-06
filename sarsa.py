@@ -1,6 +1,7 @@
 import numys as np
 import matplotlib.pyplot as plt
 import gym
+from gym.wrappers import Monitor
 
 
 def max_action(Q, state):
@@ -28,6 +29,7 @@ def getState(observation):
 
 if __name__ == '__main__':
     env = gym.make('CartPole-v0')
+    env = Monitor(env, 'moviefiles/', force=True)
     # model hyperparameters
     ALPHA = 0.1
     GAMMA = 0.9
