@@ -29,8 +29,8 @@ To set up your python environment to run the code in this repository, follow the
 	
 3. Clone the repository (if you haven't already!), and navigate to the `python/` folder.  Then, install several dependencies.
 ```bash
-git clone https://github.com/Droid021/reinforcement-L.git
-cd deep-reinforcement-learning/python
+git clone https://github.com/mrdvince/reinforcement_learning.git
+cd reinforcement_learning/python
 pip install .
 ```
 
